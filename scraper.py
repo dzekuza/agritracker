@@ -26,6 +26,50 @@ def fetch_wheat_prices():
 
     return prices
 
+def fetch_corn_prices():
+    print("🔍 Fetching corn prices...")
+    url = "https://www.agritel.com/en/home"
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, "html.parser")
+
+    corn_cells = soup.select('table:has(th:-soup-contains("Corn (€/t)")) tbody tr td')
+    corn_data = [td.get_text(strip=True) for td in corn_cells]
+
+    prices = []
+    for i in range(0, len(corn_data), 4):
+        if i + 2 < len(corn_data):
+            prices.append({
+                "month": corn_data[i],
+                "price": corn_data[i + 1],
+                "change": corn_data[i + 2]
+            })
+        if len(prices) == 5:
+            break
+
+    return prices
+
+def fetch_rapeseed_prices():
+    print("🔍 Fetching rapeseed prices...")
+    url = "https://www.agritel.com/en/home"
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, "html.parser")
+
+    rape_cells = soup.select('table:has(th:-soup-contains("Rapeseed (€/t)")) tbody tr td')
+    rape_data = [td.get_text(strip=True) for td in rape_cells]
+
+    prices = []
+    for i in range(0, len(rape_data), 4):
+        if i + 2 < len(rape_data):
+            prices.append({
+                "month": rape_data[i],
+                "price": rape_data[i + 1],
+                "change": rape_data[i + 2]
+            })
+        if len(prices) == 5:
+            break
+
+    return prices
+
 # 2. Send data to WordPress
 def send_to_wp_wheat_eu(data):
     print("📤 Sending data to WordPress (wheat_eu)...")
