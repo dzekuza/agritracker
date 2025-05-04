@@ -112,3 +112,71 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+
+# CME functions with live scraping
+def fetch_cme_wheat_prices():
+    print("📈 Fetching CME wheat prices...")
+    url = "https://www.agritel.com/en/home"
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, "html.parser")
+
+    cells = soup.select('table:has(th:-soup-contains("CME Wheat (USD/bu)")) tbody tr td')
+    data = [td.get_text(strip=True) for td in cells]
+
+    prices = []
+    for i in range(0, len(data), 4):
+        if i + 2 < len(data):
+            prices.append({
+                "month": data[i],
+                "price": data[i + 1],
+                "change": data[i + 2]
+            })
+        if len(prices) == 5:
+            break
+
+    return prices
+
+def fetch_cme_corn_prices():
+    print("📈 Fetching CME corn prices...")
+    url = "https://www.agritel.com/en/home"
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, "html.parser")
+
+    cells = soup.select('table:has(th:-soup-contains("CME Corn (USD/bu)")) tbody tr td')
+    data = [td.get_text(strip=True) for td in cells]
+
+    prices = []
+    for i in range(0, len(data), 4):
+        if i + 2 < len(data):
+            prices.append({
+                "month": data[i],
+                "price": data[i + 1],
+                "change": data[i + 2]
+            })
+        if len(prices) == 5:
+            break
+
+    return prices
+
+def fetch_cme_rapeseed_prices():
+    print("📈 Fetching CME rapeseed prices...")
+    url = "https://www.agritel.com/en/home"
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, "html.parser")
+
+    cells = soup.select('table:has(th:-soup-contains("CME Rapeseed (USD/bu)")) tbody tr td')
+    data = [td.get_text(strip=True) for td in cells]
+
+    prices = []
+    for i in range(0, len(data), 4):
+        if i + 2 < len(data):
+            prices.append({
+                "month": data[i],
+                "price": data[i + 1],
+                "change": data[i + 2]
+            })
+        if len(prices) == 5:
+            break
+
+    return prices
